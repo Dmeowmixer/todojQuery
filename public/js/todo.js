@@ -5,8 +5,9 @@ $(function(){
 
       var inputvalue = $('.inputfield').val();
 
-      $('ul').append('<li>'+inputvalue+'</li>');
+      $('ul').append('<li>'+ '<input type="checkbox">'+inputvalue+'</li>');
       $(this).val("");
+
     }
   });
 });
