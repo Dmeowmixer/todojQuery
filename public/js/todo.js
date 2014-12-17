@@ -178,8 +178,20 @@ $(function(){
   });
   // Ends enter keydown function
   $('button.sync').on('click',function (e){
-    $.post("./save",  function (d){
-        console.log( "data loaded " + data);
+    var list = [];
+    $('ul li').each(function (i,e){
+      console.log($(e).text());
+      var object = {
+        title:$(e).text(),
+        completed:$(e).find('input').prop('checked')
+      };
+      list.push(object);
+    })
+    var data = {
+      list_to_save : JSON.stringify(list)
+    };
+    $.post("./save", data, function (d){
+        // console.log( "data loaded " + data);
     });
   });
     // $.Post End

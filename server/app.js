@@ -6,6 +6,11 @@ var MongoClient = mongodb.MongoClient;// Note the db name todosdb in the connect
 var ObjectID = mongodb.ObjectID;
 var MongoConnectURL = 'mongodb://localhost:27017/todosdb';
 
+
+app.use(express.static('public'));
+// this uses bodyParser middle ware to parse the post request and populate req.body
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // app.get('/', function (req,res){
 //   res.send('hello.world!');
 // });
@@ -16,16 +21,13 @@ var server = app.listen(3000, function (){
 });
 
 app.post('/save',function (req, res){
-  console.log('user sent post request');
+  console.log( req.body );
   res.send('puppies');
 });
 
 
 
 
-app.use(express.static('public'));
-
-// app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
