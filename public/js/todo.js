@@ -118,47 +118,71 @@
 
 
 $(function(){
-  var completed = 0;
+  // Items finished counter
+  var taskcompleted = 0;
+  // Items left function 
   function updatenum(){
     var total = $('.listitems');
     return total.length + " items left";
-    if(){
-      
-    }
   }
+  // End of updatenum function
 
+  // Enter keydown event start
   $('.inputfield').keydown(function(e){
     if (e.keyCode == 13){
       var checkBoxInput = $("<input>",{
         class:"checkBox",
         type:"checkbox",
         checked:false,
+
+        // Checkbox check click event text deco line-through
+
         change: function(e){
           var checkBox = $(e.currentTarget);
           var parentLi = checkBox.closest("li");
           if(checkBox.prop("checked")){
             // it is checked
             parentLi.css("text-decoration", "line-through");
+            taskcompleted++;
           }
           else{
             // it is NOT checked
             parentLi.css("text-decoration", "none");
+            taskcompleted--;
           }
+          $('div.completed').html(taskcompleted + " items finished");
         }
       });
+      //  End of check change function
+
       var inputvalue = $('.inputfield').val();
+
       var newListItem = $('<li>',{
         class: "listitems",
         text: inputvalue
       });
+
       var counterdiv = $('<div>',{
         class:"listdiv"
       });
+      // Appends checkbox
       newListItem.prepend(checkBoxInput);
+      // Appends List items to main UL
       $('ul').append(newListItem);
-      itemsleft++;
+      // Appends items left function to Div
       counterdiv.append(updatenum);
-      newListItem.append(counterdiv);
+      // Adds and wipes counter to main div
+      $('div.counter').html(counterdiv);
     };
+    // Ends IF block
   });
+  // Ends enter keydown function
+  $('button.sync').on('click',function (e){
+    $.post("./save",  function (d){
+        console.log( "data loaded " + data);
+    });
+  });
+    // $.Post End
+  
+  // End of button Sync
 });
