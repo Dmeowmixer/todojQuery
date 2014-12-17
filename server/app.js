@@ -6,20 +6,24 @@ var MongoClient = mongodb.MongoClient;// Note the db name todosdb in the connect
 var ObjectID = mongodb.ObjectID;
 var MongoConnectURL = 'mongodb://localhost:27017/todosdb';
 
-app.get('/', function (req,res){
-  res.send('hello.world!');
-});
+// app.get('/', function (req,res){
+//   res.send('hello.world!');
+// });
 var server = app.listen(3000, function (){
   var host = server.address().address;
   var port = server.address().port;
   console.log('Example app listening at http://%s:%s', host, port)
 });
 
+app.post('/save',function (req, res){
+  console.log('user sent post request');
+  res.send('puppies');
+});
 
 
 
 
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 // app.use(bodyParser.urlencoded({ extended: true }));
 
