@@ -5,7 +5,7 @@ var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;// Note the db name todosdb in the connection string
 var ObjectID = mongodb.ObjectID;
 var MongoConnectURL = 'mongodb://localhost:27017/todosdb';
-
+var fs = require('fs');
 
 app.use(express.static('public'));
 // this uses bodyParser middle ware to parse the post request and populate req.body
@@ -23,6 +23,11 @@ var server = app.listen(3000, function (){
 app.post('/save',function (req, res){
   console.log( req.body );
   res.send('puppies');
+
+  fs.writeFile('./public/todo.txt', req.body.list_to_save, function (err){
+    if (err) return console.log(err);
+  })
+
 });
 
 

@@ -127,6 +127,22 @@ $(function(){
   }
   // End of updatenum function
 
+  // jquery get request to get the stuff in todo.txt
+  $.get("./todo.txt", function (d){
+    var items_data = $.parseJSON(d);
+    // iterate through d.length and for each ele make new li to append to ul.
+    for (var i = 0; i < items_data.length; i ++){
+      var new_list_item = $('li',{
+        "data-object-id" : items_data[i]._id
+      })
+    console.log(items_data[i]);
+    $("ul").append(items_data[i].title);
+    }
+    // $.parseJSON(d)
+  });
+  // end of get
+
+
   // Enter keydown event start
   $('.inputfield').keydown(function(e){
     if (e.keyCode == 13){
@@ -193,8 +209,7 @@ $(function(){
     $.post("./save", data, function (d){
         // console.log( "data loaded " + data);
     });
-  });
     // $.Post End
-  
+  });
   // End of button Sync
 });
