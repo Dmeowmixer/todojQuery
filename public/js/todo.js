@@ -126,17 +126,37 @@ $(function(){
     return total.length + " items left";
   }
   // End of updatenum function
+  
+  // TodoListitem function
+  function buildToDoItem (id, title, completed){
+    var completed_class = "";
+    var newCheckBox = $('<input>',{
+      type: 'checkbox'
+    });
+    var deletebutton = $("<button>",{
+      text: "x"
+    })
+    if(completed=="true"){
+      newCheckBox.attr('checked','checked');
+      completed_class = "completed";
+    }
 
+    var new_list_item = $('<li>',{
+      "data-object-id" : id,
+      text: title,
+      class: completed_class
+    });
+    new_list_item.append(deletebutton);
+    new_list_item.append(newCheckBox);
+    return new_list_item;
+  }
   // jquery get request to get the stuff in todo.txt
-  $.get("./todo.txt", function (d){
-    var items_data = $.parseJSON(d);
+  $.get("/items", function (items_data){
+    // var items_data = $.parseJSON(d);
     // iterate through d.length and for each ele make new li to append to ul.
     for (var i = 0; i < items_data.length; i ++){
-      var new_list_item = $('li',{
-        "data-object-id" : items_data[i]._id
-      })
-    console.log(items_data[i]);
-    $("ul").append(items_data[i].title);
+      var new_list_item = buildToDoItem(items_data[i]._id, items_data[i].title,items_data[i].completed);
+      $("ul").append(new_list_item);
     }
     // $.parseJSON(d)
   });
@@ -173,43 +193,60 @@ $(function(){
 
       var inputvalue = $('.inputfield').val();
 
-      var newListItem = $('<li>',{
-        class: "listitems",
-        text: inputvalue
-      });
+      
 
       var counterdiv = $('<div>',{
         class:"listdiv"
       });
       // Appends checkbox
-      newListItem.prepend(checkBoxInput);
       // Appends List items to main UL
-      $('ul').append(newListItem);
       // Appends items left function to Div
       counterdiv.append(updatenum);
       // Adds and wipes counter to main div
       $('div.counter').html(counterdiv);
+      var post_data = {
+        new_item : {
+          title : inputvalue,
+          completed : false
+        }
+      }
+
+    $.post('/item', post_data, function(data){ 
+        var new_list_item = buildToDoItem(data, inputvalue, false);
+        $('ul').append(new_list_item);
+    });
     };
     // Ends IF block
   });
   // Ends enter keydown function
-  $('button.sync').on('click',function (e){
-    var list = [];
-    $('ul li').each(function (i,e){
-      console.log($(e).text());
-      var object = {
-        title:$(e).text(),
-        completed:$(e).find('input').prop('checked')
-      };
-      list.push(object);
-    })
-    var data = {
-      list_to_save : JSON.stringify(list)
-    };
-    $.post("./save", data, function (d){
-        // console.log( "data loaded " + data);
-    });
-    // $.Post End
-  });
+
+  // $('button.sync').on('click',function (e){
+  //   var list = [];
+  //   $('ul li').each(function (i,e){
+  //     console.log($(e).text());
+  //     var object = {
+  //       title:$(e).text(),
+  //       completed:$(e).find('input').prop('checked')
+  //     };
+  //     list.push(object);
+  //   })
+  //   var data = {
+  //     list_to_save : JSON.stringify(list)
+  //   };
+  //   $.post("./save", data, function (d){
+  //       // console.log( "data loaded " + data);
+  //   });
+  //   // $.Post End
+  // });
   // End of button Sync
 });
+
+
+// click : click_delete_item_handler
+//         // click: function (e){
+//         //   var button = $(e.currentTarget);
+//         //   var object_id = button.closest("li").data("object-id");
+//         //   $.ajax('/items/'+ object_id, 
+//         //     { type:"DELETE",
+//         //     success :function(data){
+//         //       console.log('data',data);
